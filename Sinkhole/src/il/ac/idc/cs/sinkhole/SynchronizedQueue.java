@@ -1,4 +1,4 @@
-package dnsclient;
+package il.ac.idc.cs.sinkhole;
 
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Condition;

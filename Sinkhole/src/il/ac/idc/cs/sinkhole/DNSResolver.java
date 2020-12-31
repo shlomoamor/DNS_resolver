@@ -1,9 +1,8 @@
-package dnsclient;
+package il.ac.idc.cs.sinkhole;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -50,7 +49,7 @@ public class DNSResolver implements Runnable {
             dos.writeShort(0x0000);
 
             // Authority Record Count: Specifies the number of resource records in the Authority section of 
-            // the message. (“NS” stands for “name server”)
+            // the message. NS stands for <name server>
             dos.writeShort(0x0000);
 
             // Additional Record Count: Specifies the number of resource records in the Additional section of the message.
@@ -87,7 +86,7 @@ public class DNSResolver implements Runnable {
             int count = 0;
             while(count < MAX_RETRIES)
             {
-                System.out.println("Running query " + count + " to " + destination.getHostName());
+                // System.out.println("Running query " + count + " to " + destination.getHostName());
                 
                 // build request
                 byte[] dnsFrame = buildDNSFrame(query);
@@ -116,6 +115,7 @@ public class DNSResolver implements Runnable {
                 }
                 else if(answerRecords > 0) // got a resolved address?
                 {
+                    /*
                     // get the desired rr, ie, the A record                    
                     DNSParser.RR rr = null;
                     
@@ -131,8 +131,8 @@ public class DNSResolver implements Runnable {
                         rr = null;
                      
                     // get the address and return to our client 
-                    System.out.println("Got ip address of " + rr.address);
-                    
+                    // System.out.println("Got ip address of " + rr.address);
+                    */
                     // set the id to original id
                     parser.setID(clientPacketParser.getID());
                     
@@ -181,18 +181,18 @@ public class DNSResolver implements Runnable {
 	        
 	public void run() {
             
-		System.out.println("Resolver thread starting...");
+		// System.out.println("Resolver thread starting...");
 		
 		while(true)
 		{
                     DatagramPacket packet =  queue.dequeue();
                     if(packet == null)
                     {
-                            System.out.println("Request queue empty.  breaking...");
+                            // System.out.println("Request queue empty.  breaking...");
                             break;
                     }
 
-                    System.out.println("Got request from " + packet.getSocketAddress().toString());
+                    // System.out.println("Got request from " + packet.getSocketAddress().toString());
 
                     // check that this is a request
                     // check that this request is recursive
@@ -241,10 +241,10 @@ public class DNSResolver implements Runnable {
                                     resolveAndSendReply(parser, q);
                                 }
                             }
-                        } catch (UnsupportedEncodingException ex) {
-                            Logger.getLogger(DNSResolver.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (IOException ex) {
-                            Logger.getLogger(DNSResolver.class.getName()).log(Level.SEVERE, null, ex);
+                            System.err.println("Error: during run(): " + ex.getMessage());
+                            System.err.println("\tIgnoring this request and back to processing queue");                            
+                            continue;
                         }
                     }
                         
@@ -254,12 +254,14 @@ public class DNSResolver implements Runnable {
                             // return the packet to sender
                             sendErrorReply(parser, rcode);
                         } catch (IOException ex) {
-                            Logger.getLogger(DNSResolver.class.getName()).log(Level.SEVERE, null, ex);
+                            System.err.println("Error: during run(): socket send: " + ex.getMessage());
+                            System.err.println("\tIgnoring this request and back to processing queue");                            
+                            continue;
                         }
                     }
 		}	
 		
-		System.out.println("Resolver thread exiting...");
+		// System.out.println("Resolver thread exiting...");
 	}
 
 }

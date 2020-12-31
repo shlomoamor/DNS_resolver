@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dnsclient;
+package il.ac.idc.cs.sinkhole;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,6 +17,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import jdk.jfr.Unsigned;
@@ -254,7 +255,7 @@ public class DNSParser {
         return RRList; 
     }
 
-    void getLabels(int currPos, ReadDNSResult r) throws UnsupportedEncodingException
+    void getLabels(int currPos, ReadDNSResult r) 
     {       
         byte firstByte = 0;
         
@@ -268,10 +269,11 @@ public class DNSParser {
                 currPos++;            
                 byte[] record = new byte[firstByte];
                 for (int i = 0; i < firstByte; i++) {
-                    record[i] = (byte)(bb.get(currPos));
+                    record[i] = bb.get(currPos);
                     currPos++;
                 }            
-                r.host = r.host + new String(record, "UTF-8") + new String(".");                
+                //r.host = r.host + new String(record, "UTF-8") + new String(".");                
+                r.host = r.host + new String(record, StandardCharsets.UTF_8) + new String(".");
             }
             else if(firstByte == 0)
             {
@@ -295,7 +297,7 @@ public class DNSParser {
         }
     }
     
-    int getInternalQuery() throws UnsupportedEncodingException
+    int getInternalQuery() 
     {
         query = new Query();
         
@@ -315,7 +317,7 @@ public class DNSParser {
         read the name.  If this is a pointer, get get the data wherever it is pointed to
         read the type, class, ttl, rdlength and rddata
     */
-    int getRR(int currPos, int numRecords) throws UnsupportedEncodingException
+    int getRR(int currPos, int numRecords) 
     {
         for(int i = 0; i < numRecords; i++)
         {
@@ -366,7 +368,7 @@ public class DNSParser {
         return currPos;
     }
     
-    void parseDNS() throws UnsupportedEncodingException 
+    void parseDNS() 
     {
         // start reading question section
         int currPos = getInternalQuery();
@@ -375,6 +377,7 @@ public class DNSParser {
         if(getNumAnswers() > 0)  // this section is an answer
         {
             currPos = getRR(currPos, getNumAnswers());
+            return;
         }
         
         // another one?
