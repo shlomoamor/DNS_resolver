@@ -1,6 +1,4 @@
 package il.ac.idc.cs.sinkhole;
-
-import java.util.concurrent.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -8,14 +6,13 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * A synchronized bounded-size queue for multithreaded producer-consumer applications.
- * 
  * @param <T> Type of data items
  */
 public class SynchronizedQueue<T> {
 
 	private T[] buffer;
 	private int producers;
-	// TODO: Add more private members here as necessary
+
 	int putptr, takeptr, count, capacity;
 	Lock lock;
 	Condition notFull;
@@ -31,7 +28,6 @@ public class SynchronizedQueue<T> {
 	public SynchronizedQueue(int capacity) {
 		this.buffer = (T[]) (new Object[capacity]);
 		this.producers = 0;
-		// TODO: Add more logic here as necessary
 		this.capacity = capacity;
 		this.count = 0;
 		this.putptr = this.takeptr = 0;
@@ -76,7 +72,6 @@ public class SynchronizedQueue<T> {
 	/**
 	 * Enqueues an item to the end of this queue. If the queue is full, this 
 	 * method blocks until some space becomes available.
-	 * 
 	 * @param item Item to enqueue
 	 */
 	public void enqueue(T item) {
@@ -130,7 +125,6 @@ public class SynchronizedQueue<T> {
 	 * @see #unregisterProducer()
 	 */
 	public void registerProducer() {
-		// TODO: This should be in a critical section
 		lock.lock();
 		this.producers++;
 		started = true;
@@ -139,12 +133,10 @@ public class SynchronizedQueue<T> {
 
 	/**
 	 * Unregisters a producer from this queue. See <see>{@link #registerProducer()}</see>.
-	 * 
 	 * @see #dequeue()
 	 * @see #registerProducer()
 	 */
 	public void unregisterProducer() {
-		// TODO: This should be in a critical section
 		lock.lock();
 		this.producers--;
 		notEmpty.signalAll();

@@ -1,26 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package il.ac.idc.cs.sinkhole;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Random;
 
-/**
- *
- * @author david
- */
+/** This class is responsible for choosing a Random RootServer*/
 public class DNSRootServer {
     
     final private static int NUM_ROOT_SERVERS = 13;
-    
-    private class ServerInfo {
 
+    /**This class is responsible for checking that the a given address is valid*/
+    private class ServerInfo
+    {
+        /** Class constructor getting the name and address as input
+         * @param name
+         * @param strAddress IP-address
+         */
         public ServerInfo(String name, String strAddress) {
             this.name = name;
             try {
@@ -36,7 +32,8 @@ public class DNSRootServer {
 
     private ServerInfo[] servers;
     private Random rand;
-    
+
+    /**Class constructor */
     public DNSRootServer() {
         servers = new ServerInfo[NUM_ROOT_SERVERS];
         
@@ -56,7 +53,10 @@ public class DNSRootServer {
         
         rand = new Random();
     }
-    
+
+    /** Selects a random Root Server.
+     * @return A random Root Server from the servers list
+     */
     public InetAddress getRandomRootServer() {
         int idx = rand.nextInt(NUM_ROOT_SERVERS);
         return servers[idx].address;
