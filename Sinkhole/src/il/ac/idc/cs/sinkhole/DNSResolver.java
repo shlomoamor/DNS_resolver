@@ -253,7 +253,7 @@ public class DNSResolver implements Runnable {
                                 else if(blockList.isBlocked(q.host))
                                 {
                                     System.err.println("Received request for blocked host " + q.asString());
-                                    rcode = 5;
+                                    rcode = 3;
                                 }
                                 else
                                 {
