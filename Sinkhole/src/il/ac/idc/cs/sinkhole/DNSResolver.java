@@ -153,6 +153,8 @@ public class DNSResolver implements Runnable {
                 parser.getFlags().setQR(true);
                 parser.getFlags().setRD(true);
                 parser.getFlags().setRA(true);
+                // Remember to unset aa flag in the response packet
+                parser.getFlags().setAA(false);
 
                 // Then we set the address and host of the response packet to the original
                 // Client's info

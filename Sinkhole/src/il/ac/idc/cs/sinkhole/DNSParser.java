@@ -173,7 +173,16 @@ public class DNSParser
                 unsetBit(RA_BIT);
         }
 
+        /** Sets AA to B.
+         * @param b The value we want to change the AA to.
+         */
+        public void setAA(boolean b) {
+            if(b)
+                setBit(AA_BIT);
+            else
+                unsetBit(AA_BIT);
 
+        }
         
         String asString()
         {
