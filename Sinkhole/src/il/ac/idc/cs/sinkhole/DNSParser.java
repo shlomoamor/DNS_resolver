@@ -362,7 +362,7 @@ public class DNSParser
             {
                 r.currPos = currPos + 1;                
                 // Remove last . (full-stop)
-                if( r.host.charAt(r.host.length()-1) == '.')
+                if( r.host.length() != 0 && r.host.charAt(r.host.length() - 1) == '.')
                     r.host = r.host.substring(0, r.host.length() - 1);
                 break;                
             }
